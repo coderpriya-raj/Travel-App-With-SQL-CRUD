@@ -25,41 +25,48 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                  <p class="message">Not registered? <a href="#">Create an account</a></p>
                 action="main.php"
                 </form>-->
-                <form class="login-form" action="index.php" method="post">
+                <form class="login-form" action="index.php" method="post" onsubmit="return isvalid()">
                     <input type="text" placeholder="username" name="uname"/>
                     <input type="password" placeholder="password" name="pass"/>
                     <button  name="submit">login</button>
                     <?php
                     if (isset($_POST['submit'])) {
-                        $name = 'Priya123';
-                        $pass = "12345";
-                        if ($name != null && $pass != null) {
-                            ?>
-                            <script>
-                               
-                                if (!alert('Login successfully.')) {
-                                    window.location = "insert.php";
-                                }
-
-                            </script>
-                            <?php
-                        } else {
-                            ?>
-                            <script>
-                                
-                                if (!alert('Login unsucessful!')) {
-                                    window.location = "index.php";
-                                }
-
-                            </script>
-                            <?php
-                        }
+                        $name = $_POST['uname'];
+                        $pass = $_POST['pass'];
+                       $query = "SELECT * FROM `user_info` where uname='$name' and upassword='$pass'" ;
+                       $result = mysqli_query($con, $query);
+                       $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+                       $count = mysqli_num_rows($result);
+                       
+                       if ($count == 1){
+                           header("location: retrieve.php" );
+                       }else{
+                           echo '<script>window.location.href="index.php"; alert("Login Failed incorrect username or password") </script>';
+                       }
                     }
                         ?>
                 </form>
             </div>
-        </div>
-
+        </div>  
+        <script>
+            function isvalid(){
+                var username = document.form.uname.value;
+                var password = document.form.pass.value;
+                if(username.length== "" && password.length == ""){
+                    alert("username or password field is empty");
+                    return false;
+                }else{
+                    if(username.length == ""){
+                        alert("username is empty");
+                        return false;
+                    }
+                    if(password.length == ""){
+                        alert("password is empty");
+                        return false;
+                    }
+                }
+            }
+        </script>
 
 
 
